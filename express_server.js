@@ -33,11 +33,22 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`)   
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  if(!longURL) {
+    res.redirect('*');
+  };
+  res.redirect(longURL);
+});
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  if(!urlDatabase[req.params.shortURL]) {
+    res.redirect('/404');
+  };
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
@@ -48,6 +59,14 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
+app.get('/404', (req, res) => {
+  res.send(`404 Page Not Found`)
+});
+
+app.get('*', (req, res) => {
+  res.redirect('/404');
 });
 
 app.listen(PORT, () => {
