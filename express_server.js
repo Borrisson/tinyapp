@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 }
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
@@ -15,7 +16,7 @@ const urlDatabase = {
 };
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.send("Main Page");
 });
 
 app.get("/urls", (req, res) => {
@@ -57,10 +58,6 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get('/404', (req, res) => {
