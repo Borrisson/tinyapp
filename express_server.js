@@ -39,8 +39,9 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   if (!longURL) {
     res.redirect('/404');
+  } else {
+    res.redirect(longURL);
   }
-  res.redirect(longURL);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -51,9 +52,10 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.redirect('/404');
+  } else {
+    const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+    res.render("urls_show", templateVars);
   }
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  res.render("urls_show", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
