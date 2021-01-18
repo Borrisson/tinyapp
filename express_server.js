@@ -24,7 +24,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//creates unique ID for urlDB
+//creates unique ID for urlDB (does not overwrite existing);
 app.post("/urls", (req, res) => {
   let id = '';
   do {
