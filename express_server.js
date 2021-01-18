@@ -33,10 +33,11 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`)   
 });
 
+//redirects from shortURL if it exists in DB
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   if(!longURL) {
-    res.redirect('*');
+    res.redirect('/404');
   };
   res.redirect(longURL);
 });
@@ -45,6 +46,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+//redirects from shortURL if it exists in DB
 app.get("/urls/:shortURL", (req, res) => {
   if(!urlDatabase[req.params.shortURL]) {
     res.redirect('/404');
