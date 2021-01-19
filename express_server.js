@@ -11,7 +11,9 @@ const generateRandomString = function() {
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use( express.static( "public" ) );
 app.set("view engine", "ejs");
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -35,6 +37,10 @@ app.post("/urls", (req, res) => {
   } while (urlDatabase[id]);
   urlDatabase[id] = req.body.longURL;
   res.redirect(`/urls/${id}`);
+});
+
+app.get('/register', (req, res) => {
+  res.render('urls_reg');
 });
 
 app.post("/login", (req, res) => {
