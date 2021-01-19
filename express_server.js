@@ -70,8 +70,9 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect("/urls");
 });
 
+//pairs short URL with New (edited) Long URL
 app.post('/urls/:shortURL/edit', (req, res) => {
-  // urlDatabase[req.params.shortURL] = ;
+  urlDatabase[req.params.shortURL] = req.body.longURL;
   res.redirect("/urls");
 });
 
