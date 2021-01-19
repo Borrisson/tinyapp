@@ -44,6 +44,7 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+//create new shorthand URL
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -58,12 +59,13 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
+//returns json file of DB
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+//event listener for delete buttons.
 app.post('/urls/:shortURL/delete', (req, res) => {
-  console.log(req.params);
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
