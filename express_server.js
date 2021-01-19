@@ -70,6 +70,11 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect("/urls");
 });
 
+app.post('/urls/:shortURL/edit', (req, res) => {
+  // urlDatabase[req.params.shortURL] = ;
+  res.redirect("/urls");
+});
+
 app.get('/404', (req, res) => {
   res.send(`404 Page Not Found`);
 });
