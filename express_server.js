@@ -3,14 +3,14 @@ const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
 
-const generateRandomString = function () {
+const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
 //The server w/ configs
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const urlDatabase = {
