@@ -16,16 +16,16 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </li>
       </ul>
-      <% if(username) { %>
+      <% if(user) { %>
         <form method="POST" action="/logout">
           <div class="alight-items-center">
-            <p class="navbar-text mb-0">Logged In As: <%= username %>! </p>
+            <p class="navbar-text mb-0">Logged In As: <%= user.email %>! </p>
             <button class="btn btn-outline-light" type="submit">Logout</button>
           </div>
         </form>
         <% } else { %>
           <form method="POST" action="/login" class="form-inline">
-            <input class="form-control mr-sm-2" name="username" placeholder="User Name">
+            <input class="form-control mr-sm-2" name="user" placeholder="User Name">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Sign in</button>
           </form>
           <% } %>
