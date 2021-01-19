@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
 
-const generateRandomString = function() {
+const generateRandomString = function () {
   return Math.random().toString(36).substring(2, 8);
 };
 
@@ -11,7 +11,7 @@ const generateRandomString = function() {
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use( express.static( "public" ) );
+app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 
@@ -19,6 +19,19 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+const users = {
+  "34dt4f": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "3f5g3h": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 app.get("/", (req, res) => {
   res.send("Main Page");
@@ -41,6 +54,18 @@ app.post("/urls", (req, res) => {
 
 app.get('/register', (req, res) => {
   res.render('urls_reg');
+});
+
+//register POST Request...adds new user to DB
+app.post('/register', (req, res) => {
+  let id = '';
+  do {
+    id = generateRandomString();
+  } while (users[id]);
+  req.body.id = id;
+  users[id] = req.body;
+  res.cookie('user_id', id);
+  res.redirect('/urls');
 });
 
 app.post("/login", (req, res) => {
