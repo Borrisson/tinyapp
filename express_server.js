@@ -14,8 +14,8 @@ app.set("view engine", "ejs");
 
 
 const urlDatabase = {
-  "b2xVn2": { longURl: "http://www.lighthouselabs.ca", userID: "34dt4f" },
-  "9sm5xK": { longURl: "http://www.google.com", userID: "34dt4f" }
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "34dt4f" },
+  "9sm5xK": { longURL: "http://www.google.com", userID: "34dt4f" }
 };
 
 const users = {
@@ -158,7 +158,7 @@ app.get("/urls.json", (req, res) => {
 //<-------shortURL------->
 
 
-//redirects from shortURL if it exists in DB
+//redirects to the edit page if it exists in DB
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.redirect('/404');
@@ -183,7 +183,8 @@ app.post('/urls/:shortURL/edit', (req, res) => {
 
 //redirects from shortURL if it exists in DB
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  console.log(longURL);
   if (!longURL) {
     res.redirect('/404');
   } else {
