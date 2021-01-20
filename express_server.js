@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-const {generateRandomString, locateID, emailAuth} = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth } = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
@@ -43,7 +43,7 @@ app.get('/register', (req, res) => {
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  if (emailAuth(users, req.body, {registration:true})) {
+  if (emailAuth(users, req.body, { registration: true })) {
     res.redirect("/400");
   } else {
     let id = '';
@@ -111,9 +111,14 @@ app.get("/u/:shortURL", (req, res) => {
 
 //create new shorthand URL
 app.get("/urls/new", (req, res) => {
-  const id = req.cookies["user_id"];
-  const templateVars = { user: users[id] };
-  res.render("urls_new", templateVars);
+  const loggedIn = req.cookies["user_id"] ? true : false;
+  if(loggedIn) {
+    const id = req.cookies["user_id"];
+    const templateVars = { user: users[id] };
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 //redirects from shortURL if it exists in DB
