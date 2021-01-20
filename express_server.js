@@ -7,15 +7,19 @@ const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
-const emailAuth = function(body) {
-  for (let { email, password } of Object.values(users)) {
-    if (email === body.email && password === body.password) {
-      return true;
-    }
+const emailAuth = function(body, option = false) {
+  for (let [id, { email, password }] of Object.entries(users)) {
+    if (email === body.email && password === body.password && option) {
+      return id;
+    } else if (email === body.email && password === body.password)
+    return true;
   }
   return false;
 };
 
+const locateID = function(body) {
+  return emailAuth(body, true);
+};
 
 
 //The server w/ configs
@@ -92,8 +96,8 @@ app.get("/login", (req, res) => {
 //checks if user exists for login
 app.post("/login", (req, res) => {
   if(emailAuth(req.body)) {
-    console.log(req.body);
-    res.cookie('user_id', req.body.user);
+    const id = locateID(req.body);
+    res.cookie('user_id', id);
     res.redirect('/urls');
   } else {
     res.redirect("/403");
