@@ -7,12 +7,18 @@ const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
+//checks if email exists, second optional param(is for id look)
 const emailAuth = function(body, option = false) {
   for (let [id, { email, password }] of Object.entries(users)) {
     if (email === body.email && password === body.password && option) {
       return id;
-    } else if (email === body.email && password === body.password)
-    return true;
+      //for login, must match
+    } else if (email === body.email && password === body.password) { 
+      return true;
+      //for registration, if email exists don't create another
+    } else if (email === body.email) {
+      return true;
+    }
   }
   return false;
 };
