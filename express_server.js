@@ -7,14 +7,16 @@ const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
-const lookupEmail = function(body) {
-  for (let { email } of Object.values(users)) {
-    if (email === body.email) {
+const emailAuth = function(body) {
+  for (let { email, password } of Object.values(users)) {
+    if (email === body.email && password === body.password) {
       return true;
     }
   }
   return false;
 };
+
+
 
 //The server w/ configs
 const app = express();
@@ -68,7 +70,7 @@ app.get('/register', (req, res) => {
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  if (lookupEmail(req.body)) {
+  if (emailAuth(req.body)) {
     res.redirect("/400");
   } else {
     let id = '';
@@ -89,11 +91,13 @@ app.get("/login", (req, res) => {
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
-  if(lookupEmail(req.body)) {
+  if(emailAuth(req.body)) {
+    console.log(req.body);
     res.cookie('user_id', req.body.user);
     res.redirect('/urls');
+  } else {
+    res.redirect("/403");
   }
-  res.redirect("/403");
 });
 
 app.post("/logout", (req, res) => {
