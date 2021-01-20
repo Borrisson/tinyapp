@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-const { generateRandomString, locateID, emailAuth } = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth, loggedIn } = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
@@ -14,8 +14,8 @@ app.set("view engine", "ejs");
 
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { longURl: "http://www.lighthouselabs.ca", userID: "34dt4f" },
+  "9sm5xK": { longURl: "http://www.google.com", userID: "34dt4f" }
 };
 
 const users = {
@@ -111,8 +111,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 //create new shorthand URL
 app.get("/urls/new", (req, res) => {
-  const loggedIn = req.cookies["user_id"] ? true : false;
-  if(loggedIn) {
+  if (loggedIn(req.cookies["user_id"])) {
     const id = req.cookies["user_id"];
     const templateVars = { user: users[id] };
     res.render("urls_new", templateVars);
