@@ -68,7 +68,6 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   if (emailAuth(users, req.body)) {
     const id = locateID(users, req.body);
-    console.log('here we are');
     res.cookie('user_id', id);
     res.redirect('/urls');
   } else {
