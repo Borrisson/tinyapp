@@ -24,10 +24,12 @@
           </div>
         </form>
         <% } else { %>
-          <form method="POST" action="/login" class="form-inline">
-            <input class="form-control mr-sm-2" name="user" placeholder="User Name">
-            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Sign in</button>
-          </form>
+          <a href="/login">
+            <button class="btn btn-outline-light mx-2 my-2 my-sm-0" type="submit">Sign in</button>
+          </a>
+          <a href="/register">
+            <button class="btn btn-light my-2 my-sm-0 text-success" type="submit">Register</button>
+          </a>
           <% } %>
     </div>
     </div>
