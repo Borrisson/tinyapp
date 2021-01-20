@@ -53,7 +53,9 @@ app.get("/", (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render("urls_reg");
+  const id = req.cookies["user_id"];
+  const templateVars = { user: users[id], urls: urlDatabase };
+  res.render("urls_reg", templateVars);
 });
 
 //adds new user to DB (does not overwrite existing ID's)
