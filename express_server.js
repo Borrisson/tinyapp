@@ -13,7 +13,7 @@ const emailAuth = function(body, option = false) {
     if (email === body.email && password === body.password && option) {
       return id;
       //for login, must match
-    } else if (email === body.email && password === body.password) { 
+    } else if (email === body.email && password === body.password) {
       return true;
       //for registration, if email exists don't create another
     } else if (email === body.email) {
@@ -89,7 +89,7 @@ app.get("/login", (req, res) => {
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
-  if(emailAuth(req.body)) {
+  if (emailAuth(req.body)) {
     const id = locateID(req.body);
     res.cookie('user_id', id);
     res.redirect('/urls');
@@ -175,7 +175,7 @@ app.get('/400', (req, res) => {
 app.get('/403', (req, res) => {
   res.status(403);
   res.render('urls_403');
-})
+});
 
 app.get('/404', (req, res) => {
   res.send(`404 Page Not Found`);
