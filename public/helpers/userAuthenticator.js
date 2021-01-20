@@ -29,7 +29,6 @@ const loggedIn = function (userId) {
 const usersURL = function(user, database) {
   let output = {};
   for(let [id, {longURL, userID}] of Object.entries(database)) {
-    console.log(user, userID);
     if(user === userID) {
       output[id] = longURL;
     }
