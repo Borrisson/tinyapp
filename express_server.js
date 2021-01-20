@@ -90,10 +90,10 @@ app.get("/login", (req, res) => {
 //checks if user exists for login
 app.post("/login", (req, res) => {
   if(lookupEmail(req.body)) {
-    console.log('working?')
+    res.cookie('user_id', req.body.user);
+    res.redirect('/urls');
   }
-  res.cookie('user_id', req.body.user);
-  res.redirect('/urls');
+  res.redirect("/403");
 });
 
 app.post("/logout", (req, res) => {
@@ -148,8 +148,13 @@ app.post('/urls/:shortURL/edit', (req, res) => {
 
 app.get('/400', (req, res) => {
   res.status(400);
-  res.render('urls_400.ejs');
+  res.render('urls_400');
 });
+
+app.get('/403', (req, res) => {
+  res.status(403);
+  res.render('urls_403');
+})
 
 app.get('/404', (req, res) => {
   res.send(`404 Page Not Found`);
