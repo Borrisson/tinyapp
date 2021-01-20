@@ -26,4 +26,15 @@ const loggedIn = function (userId) {
   return userId ? true : false;
 };
 
-module.exports = { generateRandomString, locateID, emailAuth, loggedIn };
+const usersURL = function(user, database) {
+  let output = {};
+  for(let [id, {longURL, userID}] of Object.entries(database)) {
+    console.log(user, userID);
+    if(user === userID) {
+      output[id] = longURL;
+    }
+  }
+  return output;
+}
+
+module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL };
