@@ -10,6 +10,9 @@
 </head>
 
 <body>
+
+
+  <main>
   <% if(statusCode===400) { %>
 
     <h1> 400 Bad Request </h1>
@@ -27,9 +30,9 @@
           <h1> 404 Page Not Found </h1>
 
           <% } %>
-
-            <form method="GET" action="/register">
-              <button type="submit">Return to Registration</button>
+        </main>
+            <form method="GET" action="/urls">
+              <button type="submit">Return to main page</button>
             </form>
 
 </body>
