@@ -31,9 +31,19 @@ const users = {
   }
 };
 
+
+
+//<-------Main Page------->
+
+
 app.get("/", (req, res) => {
   res.send("Main Page");
 });
+
+
+
+//<-------register------->
+
 
 app.get('/register', (req, res) => {
   const id = req.cookies["user_id"];
@@ -57,12 +67,16 @@ app.post('/register', (req, res) => {
   }
 });
 
+
+
+//<-------login------->
+
+
 app.get("/login", (req, res) => {
   const id = req.cookies["user_id"];
   const templateVars = { user: users[id], urls: urlDatabase };
   res.render("urls_login", templateVars);
 });
-
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
@@ -74,6 +88,10 @@ app.post("/login", (req, res) => {
     res.redirect("/403");
   }
 });
+
+
+//<-------URLS------->
+
 
 app.get("/urls", (req, res) => {
   const id = req.cookies["user_id"];
@@ -93,21 +111,17 @@ app.post("/urls", (req, res) => {
 
 
 
+//<-------logout------->
+
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect('/urls');
 });
 
-//redirects from shortURL if it exists in DB
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  if (!longURL) {
-    res.redirect('/404');
-  } else {
-    res.redirect(longURL);
-  }
-});
+
+//<-------NEW URL------->
+
 
 //create new shorthand URL
 app.get("/urls/new", (req, res) => {
@@ -120,6 +134,21 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
+
+
+//<-------JSON FILE------->
+
+
+//returns json file of DB
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
+
+
+//<-------shortURL------->
+
+
 //redirects from shortURL if it exists in DB
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
@@ -129,11 +158,6 @@ app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { user: users[id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
     res.render("urls_show", templateVars);
   }
-});
-
-//returns json file of DB
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
 });
 
 //event listener for delete buttons.
@@ -148,6 +172,21 @@ app.post('/urls/:shortURL/edit', (req, res) => {
   res.redirect("/urls");
 });
 
+//redirects from shortURL if it exists in DB
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  if (!longURL) {
+    res.redirect('/404');
+  } else {
+    res.redirect(longURL);
+  }
+});
+
+
+
+//<-------400's------->
+
+
 app.get('/400', (req, res) => {
   res.status(400);
   res.render('urls_400');
@@ -161,7 +200,6 @@ app.get('/403', (req, res) => {
 app.get('/404', (req, res) => {
   res.send(`404 Page Not Found`);
 });
-
 
 app.get('*', (req, res) => {
   res.redirect('/404');
