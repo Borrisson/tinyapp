@@ -69,7 +69,9 @@ app.post('/register', (req, res) => {
   res.redirect('/urls');
 });
 
+//checks if user exists for login
 app.post("/login", (req, res) => {
+  
   res.cookie('user_id', req.body.user);
   res.redirect('/urls');
 });
