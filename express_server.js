@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-const { generateRandomString, locateID, emailAuth, loggedIn } = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth, loggedIn, usersURL } = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
@@ -95,8 +95,12 @@ app.post("/login", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const id = req.cookies["user_id"];
-  const templateVars = { user: users[id], urls: urlDatabase };
-  res.render("urls_index", templateVars);
+  if (loggedIn(id)) {
+    const templateVars = { user: users[id], urls: usersURL(id, urlDatabase)};
+    res.render("urls_index", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //creates unique ID for urlDB (does not overwrite existing);
@@ -125,8 +129,8 @@ app.post("/logout", (req, res) => {
 
 //create new shorthand URL
 app.get("/urls/new", (req, res) => {
-  if (loggedIn(req.cookies["user_id"])) {
-    const id = req.cookies["user_id"];
+  const id = req.cookies["user_id"];
+  if (loggedIn(id)) {
     const templateVars = { user: users[id] };
     res.render("urls_new", templateVars);
   } else {
