@@ -52,22 +52,6 @@ app.get("/", (req, res) => {
   res.send("Main Page");
 });
 
-app.get("/urls", (req, res) => {
-  const id = req.cookies["user_id"];
-  const templateVars = { user: users[id], urls: urlDatabase };
-  res.render("urls_index", templateVars);
-});
-
-//creates unique ID for urlDB (does not overwrite existing);
-app.post("/urls", (req, res) => {
-  let id = '';
-  do {
-    id = generateRandomString();
-  } while (urlDatabase[id]);
-  urlDatabase[id] = req.body.longURL;
-  res.redirect(`/urls/${id}`);
-});
-
 app.get('/register', (req, res) => {
   res.render("urls_reg");
 });
@@ -88,10 +72,12 @@ app.post('/register', (req, res) => {
   }
 });
 
-
 app.get("/login", (req, res) => {
-  res.render("urls_login");
+  const id = req.cookies["user_id"];
+  const templateVars = { user: users[id], urls: urlDatabase };
+  res.render("urls_login", templateVars);
 });
+
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
@@ -103,6 +89,25 @@ app.post("/login", (req, res) => {
     res.redirect("/403");
   }
 });
+
+app.get("/urls", (req, res) => {
+  const id = req.cookies["user_id"];
+  const templateVars = { user: users[id], urls: urlDatabase };
+  res.render("urls_index", templateVars);
+});
+
+//creates unique ID for urlDB (does not overwrite existing);
+app.post("/urls", (req, res) => {
+  let id = '';
+  do {
+    id = generateRandomString();
+  } while (urlDatabase[id]);
+  urlDatabase[id] = req.body.longURL;
+  res.redirect(`/urls/${id}`);
+});
+
+
+
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
