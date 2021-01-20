@@ -3,11 +3,11 @@ const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
 
-const generateRandomString = function () {
+const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
-const lookupEmail = function (body) {
+const lookupEmail = function(body) {
   for (let { email } of Object.values(users)) {
     if (email === body.email) {
       return true;
@@ -40,7 +40,7 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
-}
+};
 
 app.get("/", (req, res) => {
   res.send("Main Page");
@@ -69,7 +69,7 @@ app.get('/register', (req, res) => {
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
   if (lookupEmail(req.body)) {
-    res.redirect("/400")
+    res.redirect("/400");
   } else {
     let id = '';
     do {
