@@ -82,8 +82,16 @@ app.post('/register', (req, res) => {
   }
 });
 
+
+app.get("/login", (req, res) => {
+  res.render("urls_login");
+});
+
 //checks if user exists for login
 app.post("/login", (req, res) => {
+  if(lookupEmail(req.body)) {
+    console.log('working?')
+  }
   res.cookie('user_id', req.body.user);
   res.redirect('/urls');
 });
