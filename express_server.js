@@ -2,30 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
-
-const generateRandomString = function() {
-  return Math.random().toString(36).substring(2, 8);
-};
-
-//checks if email exists, second optional param(is for id look)
-const emailAuth = function(body, option = false) {
-  for (let [id, { email, password }] of Object.entries(users)) {
-    if (email === body.email && password === body.password && option) {
-      return id;
-      //for login, must match
-    } else if (email === body.email && password === body.password) {
-      return true;
-      //for registration, if email exists don't create another
-    } else if (email === body.email) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const locateID = function(body) {
-  return emailAuth(body, true);
-};
+const {generateRandomString, locateID, emailAuth} = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
@@ -66,7 +43,7 @@ app.get('/register', (req, res) => {
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  if (emailAuth(req.body)) {
+  if (emailAuth(users, req.body, {registration:true})) {
     res.redirect("/400");
   } else {
     let id = '';
@@ -89,8 +66,9 @@ app.get("/login", (req, res) => {
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
-  if (emailAuth(req.body)) {
-    const id = locateID(req.body);
+  if (emailAuth(users, req.body)) {
+    const id = locateID(users, req.body);
+    console.log('here we are');
     res.cookie('user_id', id);
     res.redirect('/urls');
   } else {
