@@ -96,7 +96,7 @@ app.post("/login", (req, res) => {
 app.get("/urls", (req, res) => {
   const id = req.cookies["user_id"];
   if (loggedIn(id)) {
-    const templateVars = { user: users[id], urls: usersURL(id, urlDatabase)};
+    const templateVars = { user: users[id], urls: usersURL(id, urlDatabase) };
     res.render("urls_index", templateVars);
   } else {
     res.redirect("/login");
@@ -105,12 +105,17 @@ app.get("/urls", (req, res) => {
 
 //creates unique ID for urlDB (does not overwrite existing);
 app.post("/urls", (req, res) => {
-  let id = '';
-  do {
-    id = generateRandomString();
-  } while (urlDatabase[id]);
-  urlDatabase[id] = req.body.longURL;
-  res.redirect(`/urls/${id}`);
+  const userID = req.cookies["user_id"];
+  if (loggedIn(userID)) {
+    let id = '';
+    do {
+      id = generateRandomString();
+    } while (urlDatabase[id]);
+    urlDatabase[id] = { longURL: req.body.longURL, userID };
+    res.redirect(`/urls/`);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 
