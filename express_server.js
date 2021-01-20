@@ -1,6 +1,7 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const PORT = 8080; // default port 8080
+const bcrypt = require('bcrypt');
+const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const { generateRandomString, locateID, emailAuth, loggedIn, usersURL } = require('./public/helpers/userAuthenticator');
 
@@ -60,8 +61,16 @@ app.post('/register', (req, res) => {
     do {
       id = generateRandomString();
     } while (users[id]);
-    req.body.id = id;
-    users[id] = req.body;
+    
+    const { email, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const newUser = 
+    {
+      id,
+      email,
+      password: hashedPassword
+    };
+    users[id] = newUser;
     res.cookie('user_id', id);
     res.redirect('/urls');
   }
