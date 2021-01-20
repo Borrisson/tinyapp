@@ -1,3 +1,6 @@
+const bcrypt = require('bcrypt');
+
+
 const generateRandomString = function () {
   return Math.random().toString(36).substring(2, 8);
 };
@@ -5,10 +8,10 @@ const generateRandomString = function () {
 //checks if email exists, third optional param(is for id lookup)
 const emailAuth = function (users, body, { lookupID = false, registration = false } = {}) {
   for (let [id, { email, password }] of Object.entries(users)) {
-    if (email === body.email && password === body.password && lookupID) {
+    if (email === body.email && bcrypt.compareSync(body.password, password) && lookupID) {
       return id;
       //for login, must match
-    } else if (email === body.email && password === body.password) {
+    } else if (email === body.email && bcrypt.compareSync(body.password, password)) {
       return true;
       //for registration, if email exists don't create another
     } else if (email === body.email && registration) {
