@@ -7,6 +7,15 @@ const generateRandomString = function () {
   return Math.random().toString(36).substring(2, 8);
 };
 
+const lookupEmail = function (body) {
+  for (let { email } of Object.values(users)) {
+    if (email === body.email) {
+      return true;
+    }
+  }
+  return false;
+};
+
 //The server w/ configs
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,24 +63,27 @@ app.post("/urls", (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('urls_reg');
+  res.render("urls_reg");
 });
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  let id = '';
-  do {
-    id = generateRandomString();
-  } while (users[id]);
-  req.body.id = id;
-  users[id] = req.body;
-  res.cookie('user_id', id);
-  res.redirect('/urls');
+  if (lookupEmail(req.body)) {
+    res.redirect("/400")
+  } else {
+    let id = '';
+    do {
+      id = generateRandomString();
+    } while (users[id]);
+    req.body.id = id;
+    users[id] = req.body;
+    res.cookie('user_id', id);
+    res.redirect('/urls');
+  }
 });
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
-  
   res.cookie('user_id', req.body.user);
   res.redirect('/urls');
 });
@@ -104,7 +116,7 @@ app.get("/urls/:shortURL", (req, res) => {
     res.redirect('/404');
   } else {
     const id = req.cookies["user_id"];
-    const templateVars = { user: users[id] , shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+    const templateVars = { user: users[id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
     res.render("urls_show", templateVars);
   }
 });
@@ -126,9 +138,15 @@ app.post('/urls/:shortURL/edit', (req, res) => {
   res.redirect("/urls");
 });
 
+app.get('/400', (req, res) => {
+  res.status(400);
+  res.render('urls_400.ejs');
+});
+
 app.get('/404', (req, res) => {
   res.send(`404 Page Not Found`);
 });
+
 
 app.get('*', (req, res) => {
   res.redirect('/404');
