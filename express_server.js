@@ -164,21 +164,16 @@ app.get("/urls/:shortURL", (req, res) => {
     res.redirect('/404');
   } else {
     const id = req.cookies["user_id"];
-    const templateVars = 
-    { 
-      user: users[id], 
-      shortURL: req.params.shortURL, 
-      longURL: urlDatabase[req.params.shortURL].longURL 
+    const templateVars =
+    {
+      user: users[id],
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL
     };
     res.render("urls_show", templateVars);
   }
 });
 
-//event listener for delete buttons.
-app.post('/urls/:shortURL/delete', (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
-});
 
 //pairs short URL with New (edited) Long URL
 app.post('/urls/:shortURL/edit', (req, res) => {
@@ -203,25 +198,54 @@ app.get("/u/:shortURL", (req, res) => {
 
 
 
+//<-------Delete------->
+
+
+//event listener for delete buttons.
+app.post('/urls/:shortURL/delete', (req, res) => {
+  const id = req.cookies["user_id"];
+  if (id) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  } else {
+    res.redirect("/401");
+  }
+});
+
+
+
+
 //<-------400's------->
 
 
 app.get('/400', (req, res) => {
   res.status(400);
-  res.render('urls_400');
+  const templateVars = { statusCode: 400 };
+  res.render('urls_4xx', templateVars);
+});
+
+app.get('/401', (req, res) => {
+  res.status(401);
+  const templateVars = { statusCode: 401 };
+  res.render('urls_4xx', templateVars);
 });
 
 app.get('/403', (req, res) => {
   res.status(403);
-  res.render('urls_403');
+  const templateVars = { statusCode: 403 };
+  res.render('urls_4xx', templateVars);
 });
 
 app.get('/404', (req, res) => {
-  res.send(`404 Page Not Found`);
+  res.status(404);
+  const templateVars = { statusCode: 404 };
+  res.render('urls_4xx', templateVars);
 });
 
 app.get('*', (req, res) => {
-  res.redirect('/404');
+  res.status(404);
+  const templateVars = { statusCode: 404 };
+  res.render('urls_4xx', templateVars);
 });
 
 app.listen(PORT, () => {
