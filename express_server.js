@@ -177,8 +177,13 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 //pairs short URL with New (edited) Long URL
 app.post('/urls/:shortURL/edit', (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
-  res.redirect("/urls");
+  const id = req.cookies["user_id"];
+  if (loggedIn(id)) {
+    urlDatabase[req.params.shortURL] = { longURL: req.body.longURL, userID: id };
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //redirects from shortURL if it exists in DB
