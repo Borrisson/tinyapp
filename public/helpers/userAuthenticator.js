@@ -2,7 +2,7 @@ const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
 
-//checks if email exists, second optional param(is for id lookup)
+//checks if email exists, third optional param(is for id lookup)
 const emailAuth = function(users, body, { lookupID = false, registration = false } = {}) {
   for (let [id, { email, password }] of Object.entries(users)) {
     if (email === body.email && password === body.password && lookupID) {
