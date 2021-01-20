@@ -164,7 +164,12 @@ app.get("/urls/:shortURL", (req, res) => {
     res.redirect('/404');
   } else {
     const id = req.cookies["user_id"];
-    const templateVars = { user: users[id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL };
+    const templateVars = 
+    { 
+      user: users[id], 
+      shortURL: req.params.shortURL, 
+      longURL: urlDatabase[req.params.shortURL].longURL 
+    };
     res.render("urls_show", templateVars);
   }
 });
