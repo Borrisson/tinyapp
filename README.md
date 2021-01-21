@@ -4,11 +4,11 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
-!["screenshot of the urls page"](#)
-!["screenshot of the login page"](#)
-!["screenshot of the new url page"]()
-!["screenshot of the new url page"]()
-!["screenshot of the new url page"]()
+!["screenshot of the urls page"](https://github.com/Borrisson/tinyapp/blob/master/screenshots/main_page.png)
+!["screenshot of the login page"](https://github.com/Borrisson/tinyapp/blob/master/screenshots/login_page.png)
+!["screenshot of the new url page"](https://github.com/Borrisson/tinyapp/blob/master/screenshots/new_url_page.png)
+!["screenshot of the edit url page"](https://github.com/Borrisson/tinyapp/blob/master/screenshots/edit_url_page.png)
+!["screenshot of the register page"](https://github.com/Borrisson/tinyapp/blob/master/screenshots/register_page.png)
 
 ## Dependencies
 
