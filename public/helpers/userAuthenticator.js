@@ -45,4 +45,14 @@ const getUserByEmail = function(srchEmail, database) {
   return undefined;
 };
 
-module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail };
+
+const numberOfVisits = function(shortURL, urlDatabase) {
+  for (let [shortId, properties] of Object.entries(urlDatabase)) {
+    if (shortURL === shortId) {
+      return properties.visits++;
+    }
+  }
+};
+
+
+module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail, numberOfVisits};

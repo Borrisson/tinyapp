@@ -3,7 +3,7 @@ const PORT = 8080; // default port 8080
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered } = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, numberOfVisits } = require('./public/helpers/userAuthenticator');
 const methodOverride = require('method-override');
 
 //The server w/ configs
@@ -17,14 +17,6 @@ app.use(cookieSession({
 }));
 
 app.set("view engine", "ejs");
-
-const numberOfVisits = function(shortURL, urlDatabase) {
-  for(let [shortId, properties] of Object.entries(urlDatabase)) {
-    if(shortURL === shortId) {
-      return properties.visits++ 
-    }
-  };
-};
 
 
 const urlDatabase = {
