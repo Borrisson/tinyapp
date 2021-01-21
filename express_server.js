@@ -221,7 +221,6 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect('/404');
   } else {
     numberOfVisits(req.params.shortURL, urlDatabase);
-    console.log("DB", urlDatabase);
     res.redirect(longURL);
   }
 });
