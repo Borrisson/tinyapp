@@ -3,7 +3,7 @@ const PORT = 8080; // default port 8080
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, numberOfVisits } = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, numberOfVisits, visitorsList } = require('./public/helpers/userAuthenticator');
 const methodOverride = require('method-override');
 
 //The server w/ configs
@@ -43,7 +43,7 @@ const users = {
 
 
 app.get("/", (req, res) => {
-  res.send("Main Page");
+  res.redirect('/urls');
 });
 
 
@@ -200,13 +200,18 @@ app.put('/urls/:shortURL', (req, res) => {
   }
 });
 
-
 //redirects from shortURL if it exists in DB
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL] ? urlDatabase[shortURL].longURL : false;
   if (!longURL) {
     res.redirect('/404');
+  } else if (!req.session.user_id) {
+    const id = generateRandomString();
+    req.session.user_id =  id;
+    numberOfVisits(shortURL, urlDatabase);
+    visitorsList(shortURL, id, urlDatabase);
+    res.redirect(longURL);
   } else {
     numberOfVisits(shortURL, urlDatabase);
     res.redirect(longURL);

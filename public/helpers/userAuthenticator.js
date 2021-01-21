@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 
 
-const generateRandomString = function(database) {
+const generateRandomString = function(database = {}) {
   let output = "";
   do {
     output = Math.random().toString(36).substring(2, 8);
-  } while (database[output])
+  } while (database[output]);
   return output;
 };
 
@@ -58,5 +58,13 @@ const numberOfVisits = function(shortURL, urlDatabase) {
   }
 };
 
+const visitorsList = function(shortURL, cookie, urlDatabase) {
+  for (let [shortId, properties] of Object.entries(urlDatabase)) {
+    if (shortURL === shortId && !properties.visitors.includes(cookie)) {
+      return properties.visitors.push({ cookie });
+    }
+  }
+};
 
-module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail, numberOfVisits};
+
+module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail, numberOfVisits, visitorsList };
