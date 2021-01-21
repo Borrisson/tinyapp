@@ -177,7 +177,7 @@ app.get("/urls/:shortURL", (req, res) => {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
       visits: urlDatabase[req.params.shortURL].visits,
-      visitors: urlDatabase[req.params.shortURL].visitors.length
+      visitors: urlDatabase[req.params.shortURL].visitors
     };
     res.render("urls_show", templateVars);
   } else if (loggedIn(id)) {

@@ -29,7 +29,25 @@
               <%= shortURL %>
             </a></p>
             <p class="card-text">Number of visits: <%= visits %> </p>
-            <p class="card-text">Number of different visitors: <%= visitors %> </p>
+           <p class="card-text">Number of different visitors: <%= visitors.length %> </p>
+     
+           <% for(let {cookie, date} of visitors) { %>
+            <div class="container">
+              <div class="row align-items-center justify-content-center">
+                <div class="col-4">
+                  <p>
+                    User_Id: 
+                    <%= cookie %>  
+                  </p>
+                </div>
+                <div class="col-4">
+                  <p>
+                  Time Stamp: <%= date %>
+                </p>
+                </div>
+              </div>
+            <% } %>
+          </ul>
         </div>
         <div class="card-footer text-muted"></div>
         <h1 class="text-muted">Edit</h1>

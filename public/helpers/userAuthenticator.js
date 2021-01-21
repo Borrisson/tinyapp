@@ -59,9 +59,10 @@ const numberOfVisits = function(shortURL, urlDatabase) {
 };
 
 const visitorsList = function(shortURL, cookie, urlDatabase) {
+  const date = Date.now();
   for (let [shortId, properties] of Object.entries(urlDatabase)) {
     if (shortURL === shortId && !properties.visitors.includes(cookie)) {
-      return properties.visitors.push({ cookie });
+      return properties.visitors.push({ cookie, date });
     }
   }
 };
