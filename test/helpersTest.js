@@ -1,12 +1,15 @@
+const bcrypt = require('bcrypt');
 const { assert } = require('chai');
 
 const { locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail } = require('../public/helpers/userAuthenticator');
+
+const hashedPassword = bcrypt.hashSync("purple-monkey-dinosaur", 10);
 
 const testUsers = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: hashedPassword
   },
   "user2RandomID": {
     id: "user2RandomID",
@@ -98,5 +101,35 @@ describe('usersURL', function () {
   it('should return an empty object if user exists, but does not have any links', function () {
     const userURL = usersURL("user2RandomID", urlDatabase);
     assert.deepEqual(userURL, {});
+  });
+});
+
+describe('emailAuth', function () {
+  it('should return true if password and email are correct', function () {
+    const user = {
+      id: "userRandomID",
+      email: "user@example.com",
+      password: "purple-monkey-dinosaur"
+    };
+    const result = emailAuth(user, testUsers);
+    assert.isTrue(result);
+  });
+  it('should return false if password is not correct', function () {
+    const user = {
+      id: "userRandomID",
+      email: "user@example.com",
+      password: "purple-monkey"
+    };
+    const result = emailAuth(user, testUsers);
+    assert.isFalse(result);
+  });
+  it('should return false if email is not correct', function () {
+    const user = {
+      id: "userRandomID",
+      email: "user@example222.com",
+      password: "purple-monkey-dinosaur"
+    };
+    const result = emailAuth(user, testUsers);
+    assert.isFalse(result);
   });
 });
