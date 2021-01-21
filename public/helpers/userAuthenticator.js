@@ -6,12 +6,9 @@ const generateRandomString = function() {
 };
 
 //checks if email exists, third optional param(is for id lookup, or for registration check)
-const emailAuth = function(user, database, { lookupID = false, registration = false } = {}) {
-  for (let [id, { email, password }] of Object.entries(database)) {
-    if (email === user.email && bcrypt.compareSync(user.password, password) && lookupID) {
-      return id;
-      //for login, must match
-    } else if (email === user.email && bcrypt.compareSync(user.password, password)) {
+const emailAuth = function(user, database, { registration = false } = {}) {
+  for (let { email, password } of Object.values(database)) {
+     if (email === user.email && bcrypt.compareSync(user.password, password)) {
       return true;
       //for registration, if email exists don't create another
     } else if (email === user.email && registration) {
@@ -21,8 +18,8 @@ const emailAuth = function(user, database, { lookupID = false, registration = fa
   return false;
 };
 
-const locateID = function(userInfo, database) {
-  return emailAuth(userInfo, database, { lookupID: true });
+const locateID = function({email}, database) {
+  return getUserByEmail(email, database);
 };
 
 const loggedIn = function(userId) {
@@ -39,8 +36,12 @@ const usersURL = function(user, database) {
   return output;
 };
 
-const getUserByEmail = function(email, database) {
-
+const getUserByEmail = function(srchEmail, database) {
+  for(let {id, email} of Object.values(database)) {
+    if(email === srchEmail) {
+      return id;
+    }
+  }
 };
 
 module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL };
