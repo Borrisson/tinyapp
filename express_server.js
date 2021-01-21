@@ -64,7 +64,7 @@ app.post('/register', (req, res) => {
     do {
       id = generateRandomString();
     } while (users[id]);
-    
+
     const { email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser =
@@ -172,10 +172,10 @@ app.get("/urls.json", (req, res) => {
 
 //redirects to the edit page if it exists in DB
 app.get("/urls/:shortURL", (req, res) => {
+  const id = req.session.user_id;
   if (!urlDatabase[req.params.shortURL]) {
     res.redirect('/404');
-  } else {
-    const id = req.session.user_id;
+  } else if (loggedIn(id) && urlDatabase[req.params.shortURL].userID === id) {
     const templateVars =
     {
       user: users[id],
@@ -183,6 +183,10 @@ app.get("/urls/:shortURL", (req, res) => {
       longURL: urlDatabase[req.params.shortURL].longURL
     };
     res.render("urls_show", templateVars);
+  } else if(loggedIn(id)) {
+    res.redirect('/401');
+  } else {
+    res.render("urls_show", { user: false });
   }
 });
 
@@ -190,7 +194,9 @@ app.get("/urls/:shortURL", (req, res) => {
 //pairs short URL with New (edited) Long URL
 app.post('/urls/:shortURL/edit', (req, res) => {
   const id = req.session.user_id;
-  if (loggedIn(id)) {
+  console.log(urlDatabase[req.params.shortURL].userID);
+  //checks if logged in and own url to be edited
+  if (loggedIn(id) && urlDatabase[req.params.shortURL].userID === id) {
     urlDatabase[req.params.shortURL] = { longURL: req.body.longURL, userID: id };
     res.redirect("/urls");
   } else {
@@ -200,7 +206,7 @@ app.post('/urls/:shortURL/edit', (req, res) => {
 
 //redirects from shortURL if it exists in DB
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
+  const longURL = urlDatabase[req.params.shortURL] ? urlDatabase[req.params.shortURL].longURL : false;
   if (!longURL) {
     res.redirect('/404');
   } else {
