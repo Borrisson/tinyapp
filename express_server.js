@@ -2,17 +2,20 @@ const express = require("express");
 const PORT = 8080; // default port 8080
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const { generateRandomString, locateID, emailAuth, loggedIn, usersURL } = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(express.static("public"));
-app.set("view engine", "ejs");
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1'],
+}));
 
+app.set("view engine", "ejs");
 
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "34dt4f" },
@@ -47,7 +50,7 @@ app.get("/", (req, res) => {
 
 
 app.get('/register', (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   const templateVars = { user: users[id], urls: urlDatabase };
   res.render("urls_reg", templateVars);
 });
@@ -71,7 +74,7 @@ app.post('/register', (req, res) => {
       password: hashedPassword
     };
     users[id] = newUser;
-    res.cookie('user_id', id);
+    req.session.user_id = id; 
     res.redirect('/urls');
   }
 });
@@ -82,7 +85,7 @@ app.post('/register', (req, res) => {
 
 
 app.get("/login", (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   const templateVars = { user: users[id], urls: urlDatabase };
   res.render("urls_login", templateVars);
 });
@@ -91,7 +94,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   if (emailAuth(users, req.body)) {
     const id = locateID(users, req.body);
-    res.cookie('user_id', id);
+    req.session.user_id = id; 
     res.redirect('/urls');
   } else {
     res.redirect("/403");
@@ -103,7 +106,7 @@ app.post("/login", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   if (loggedIn(id)) {
     const templateVars = { user: users[id], urls: usersURL(id, urlDatabase) };
     res.render("urls_index", templateVars);
@@ -114,7 +117,7 @@ app.get("/urls", (req, res) => {
 
 //creates unique ID for urlDB (does not overwrite existing);
 app.post("/urls", (req, res) => {
-  const userID = req.cookies["user_id"];
+  const userID = req.session.user_id;
   if (loggedIn(userID)) {
     let id = '';
     do {
@@ -133,7 +136,7 @@ app.post("/urls", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  req.session.user_id = null; 
   res.redirect('/urls');
 });
 
@@ -143,7 +146,7 @@ app.post("/logout", (req, res) => {
 
 //create new shorthand URL
 app.get("/urls/new", (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   if (loggedIn(id)) {
     const templateVars = { user: users[id] };
     res.render("urls_new", templateVars);
@@ -172,7 +175,7 @@ app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
     res.redirect('/404');
   } else {
-    const id = req.cookies["user_id"];
+    const id = req.session.user_id;
     const templateVars =
     {
       user: users[id],
@@ -186,7 +189,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //pairs short URL with New (edited) Long URL
 app.post('/urls/:shortURL/edit', (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   if (loggedIn(id)) {
     urlDatabase[req.params.shortURL] = { longURL: req.body.longURL, userID: id };
     res.redirect("/urls");
@@ -212,7 +215,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 //event listener for delete buttons.
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const id = req.cookies["user_id"];
+  const id = req.session.user_id;
   if (id) {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
