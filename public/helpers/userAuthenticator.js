@@ -21,7 +21,7 @@ const emailAuth = function(database, user, { lookupID = false, registration = fa
   return false;
 };
 
-const locateID = function(database, userInfo) {
+const locateID = function(userInfo, database) {
   return emailAuth(database, userInfo, { lookupID: true });
 };
 
@@ -37,6 +37,10 @@ const usersURL = function(user, database) {
     }
   }
   return output;
+};
+
+const getUserByEmail = function(email, database) {
+
 };
 
 module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL };

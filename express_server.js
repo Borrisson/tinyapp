@@ -93,7 +93,7 @@ app.get("/login", (req, res) => {
 //checks if user exists for login
 app.post("/login", (req, res) => {
   if (emailAuth(users, req.body)) {
-    const id = locateID(users, req.body);
+    const id = locateID(req.body, users);
     req.session.user_id = id; 
     res.redirect('/urls');
   } else {
