@@ -3,7 +3,7 @@ const PORT = 8080; // default port 8080
 const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-const { generateRandomString, locateID, emailAuth, loggedIn, usersURL } = require('./public/helpers/userAuthenticator');
+const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered } = require('./public/helpers/userAuthenticator');
 
 
 //The server w/ configs
@@ -57,7 +57,7 @@ app.get('/register', (req, res) => {
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  if (emailAuth(req.body, users, { registration: true })) {
+  if (isRegistered(req.body, users)) {
     res.redirect("/400");
   } else {
     let id = '';
