@@ -4,11 +4,12 @@ const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered } = require('./public/helpers/userAuthenticator');
-
+const methodOverride = require('method-override');
 
 //The server w/ configs
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(express.static("public"));
 app.use(cookieSession({
   name: 'session',
@@ -183,7 +184,7 @@ app.get("/urls/:shortURL", (req, res) => {
       longURL: urlDatabase[req.params.shortURL].longURL
     };
     res.render("urls_show", templateVars);
-  } else if(loggedIn(id)) {
+  } else if (loggedIn(id)) {
     res.redirect('/401');
   } else {
     res.render("urls_show", { user: false });
@@ -192,9 +193,8 @@ app.get("/urls/:shortURL", (req, res) => {
 
 
 //pairs short URL with New (edited) Long URL
-app.post('/urls/:shortURL/edit', (req, res) => {
+app.put('/urls/:shortURL', (req, res) => {
   const id = req.session.user_id;
-  console.log(urlDatabase[req.params.shortURL].userID);
   //checks if logged in and own url to be edited
   if (loggedIn(id) && urlDatabase[req.params.shortURL].userID === id) {
     urlDatabase[req.params.shortURL] = { longURL: req.body.longURL, userID: id };
@@ -220,7 +220,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 
 //event listener for delete buttons.
-app.post('/urls/:shortURL/delete', (req, res) => {
+app.delete('/urls/:shortURL', (req, res) => {
   const id = req.session.user_id;
   if (id) {
     delete urlDatabase[req.params.shortURL];

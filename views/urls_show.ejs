@@ -31,7 +31,7 @@
         </div>
         <div class="card-footer text-muted"></div>
         <h1 class="text-muted">Edit</h1>
-        <form class="form-inline justify-content-md-center" action="/urls/<%= shortURL %>/edit" method="POST">
+        <form class="form-inline justify-content-md-center" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
           <div class="form-group mb-2">
             <label for="longURL">Enter a URL:</label>
             <input class="form-control" type="text" name="longURL" placeholder="http://"
