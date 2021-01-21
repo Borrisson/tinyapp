@@ -45,4 +45,4 @@ const getUserByEmail = function(srchEmail, database) {
   return undefined;
 };
 
-module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered };
+module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered, getUserByEmail };
