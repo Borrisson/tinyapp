@@ -18,6 +18,15 @@ app.use(cookieSession({
 
 app.set("view engine", "ejs");
 
+const numberOfVisits = function(shortURL, urlDatabase) {
+  for(let [shortId, properties] of Object.entries(urlDatabase)) {
+    if(shortURL === shortId) {
+      return properties.visits++ 
+    }
+  };
+};
+
+
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "34dt4f" },
   "9sm5xK": { longURL: "http://www.google.com", userID: "34dt4f" }
@@ -124,7 +133,7 @@ app.post("/urls", (req, res) => {
     do {
       id = generateRandomString();
     } while (urlDatabase[id]);
-    urlDatabase[id] = { longURL: req.body.longURL, userID };
+    urlDatabase[id] = { longURL: req.body.longURL, userID, visits: 0 };
     res.redirect(`/urls/`);
   } else {
     res.redirect("/login");
@@ -181,7 +190,8 @@ app.get("/urls/:shortURL", (req, res) => {
     {
       user: users[id],
       shortURL: req.params.shortURL,
-      longURL: urlDatabase[req.params.shortURL].longURL
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      visits: urlDatabase[req.params.shortURL].visits
     };
     res.render("urls_show", templateVars);
   } else if (loggedIn(id)) {
@@ -210,6 +220,8 @@ app.get("/u/:shortURL", (req, res) => {
   if (!longURL) {
     res.redirect('/404');
   } else {
+    numberOfVisits(req.params.shortURL, urlDatabase);
+    console.log("DB", urlDatabase);
     res.redirect(longURL);
   }
 });
