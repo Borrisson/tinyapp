@@ -42,6 +42,7 @@ const getUserByEmail = function(srchEmail, database) {
       return id;
     }
   }
+  return undefined;
 };
 
 module.exports = { generateRandomString, locateID, emailAuth, loggedIn, usersURL, isRegistered };
