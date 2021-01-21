@@ -213,6 +213,8 @@ app.get("/u/:shortURL", (req, res) => {
     visitorsList(shortURL, id, urlDatabase);
     res.redirect(longURL);
   } else {
+    const id = req.session.user_id;
+    visitorsList(shortURL, id, urlDatabase);
     numberOfVisits(shortURL, urlDatabase);
     res.redirect(longURL);
   }

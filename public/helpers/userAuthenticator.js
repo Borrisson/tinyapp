@@ -58,11 +58,11 @@ const numberOfVisits = function(shortURL, urlDatabase) {
   }
 };
 
-const visitorsList = function(shortURL, cookie, urlDatabase) {
+const visitorsList = function(shortURL, userID, urlDatabase) {
   const date = Date.now();
-  for (let [shortId, properties] of Object.entries(urlDatabase)) {
-    if (shortURL === shortId && !properties.visitors.includes(cookie)) {
-      return properties.visitors.push({ cookie, date });
+  for (let [shortId, {visitors}] of Object.entries(urlDatabase)) {
+    if (shortURL === shortId && visitors.filter(({cookie}) => cookie === userID).length === 0) {
+      return visitors.push({ cookie: userID, date });
     }
   }
 };
