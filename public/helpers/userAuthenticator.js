@@ -6,7 +6,7 @@ const generateRandomString = function() {
 };
 
 //checks if email exists, third optional param(is for id lookup, or for registration check)
-const emailAuth = function(database, user, { lookupID = false, registration = false } = {}) {
+const emailAuth = function(user, database, { lookupID = false, registration = false } = {}) {
   for (let [id, { email, password }] of Object.entries(database)) {
     if (email === user.email && bcrypt.compareSync(user.password, password) && lookupID) {
       return id;
@@ -22,7 +22,7 @@ const emailAuth = function(database, user, { lookupID = false, registration = fa
 };
 
 const locateID = function(userInfo, database) {
-  return emailAuth(database, userInfo, { lookupID: true });
+  return emailAuth(userInfo, database, { lookupID: true });
 };
 
 const loggedIn = function(userId) {
@@ -31,7 +31,7 @@ const loggedIn = function(userId) {
 
 const usersURL = function(user, database) {
   let output = {};
-  for (let [id, {longURL, userID}] of Object.entries(database)) {
+  for (let [id, { longURL, userID }] of Object.entries(database)) {
     if (user === userID) {
       output[id] = longURL;
     }

@@ -57,7 +57,7 @@ app.get('/register', (req, res) => {
 
 //adds new user to DB (does not overwrite existing ID's)
 app.post('/register', (req, res) => {
-  if (emailAuth(users, req.body, { registration: true })) {
+  if (emailAuth(req.body, users, { registration: true })) {
     res.redirect("/400");
   } else {
     let id = '';
@@ -67,14 +67,14 @@ app.post('/register', (req, res) => {
     
     const { email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = 
+    const newUser =
     {
       id,
       email,
       password: hashedPassword
     };
     users[id] = newUser;
-    req.session.user_id = id; 
+    req.session.user_id = id;
     res.redirect('/urls');
   }
 });
@@ -92,9 +92,9 @@ app.get("/login", (req, res) => {
 
 //checks if user exists for login
 app.post("/login", (req, res) => {
-  if (emailAuth(users, req.body)) {
+  if (emailAuth(req.body, users)) {
     const id = locateID(req.body, users);
-    req.session.user_id = id; 
+    req.session.user_id = id;
     res.redirect('/urls');
   } else {
     res.redirect("/403");
@@ -136,7 +136,7 @@ app.post("/urls", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  req.session.user_id = null; 
+  req.session.user_id = null;
   res.redirect('/urls');
 });
 
