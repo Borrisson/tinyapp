@@ -62,11 +62,7 @@ app.post('/register', (req, res) => {
   if (isRegistered(req.body, users)) {
     res.redirect("/400");
   } else {
-    let id = '';
-    do {
-      id = generateRandomString();
-    } while (users[id]);
-
+    const id = generateRandomString(users);
     const { email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser =
@@ -121,11 +117,8 @@ app.get("/urls", (req, res) => {
 app.post("/urls", (req, res) => {
   const userID = req.session.user_id;
   if (loggedIn(userID)) {
-    let id = '';
-    do {
-      id = generateRandomString();
-    } while (urlDatabase[id]);
-    urlDatabase[id] = { longURL: req.body.longURL, userID, visits: 0 };
+    const id = generateRandomString(urlDatabase);
+    urlDatabase[id] = { longURL: req.body.longURL, userID, visits: 0, visitors: [] };
     res.redirect(`/urls/`);
   } else {
     res.redirect("/login");
@@ -183,7 +176,8 @@ app.get("/urls/:shortURL", (req, res) => {
       user: users[id],
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
-      visits: urlDatabase[req.params.shortURL].visits
+      visits: urlDatabase[req.params.shortURL].visits,
+      visitors: urlDatabase[req.params.shortURL].visitors.length
     };
     res.render("urls_show", templateVars);
   } else if (loggedIn(id)) {
@@ -206,13 +200,15 @@ app.put('/urls/:shortURL', (req, res) => {
   }
 });
 
+
 //redirects from shortURL if it exists in DB
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL] ? urlDatabase[req.params.shortURL].longURL : false;
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL] ? urlDatabase[shortURL].longURL : false;
   if (!longURL) {
     res.redirect('/404');
   } else {
-    numberOfVisits(req.params.shortURL, urlDatabase);
+    numberOfVisits(shortURL, urlDatabase);
     res.redirect(longURL);
   }
 });

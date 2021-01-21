@@ -1,8 +1,12 @@
 const bcrypt = require('bcrypt');
 
 
-const generateRandomString = function() {
-  return Math.random().toString(36).substring(2, 8);
+const generateRandomString = function(database) {
+  let output = "";
+  do {
+    output = Math.random().toString(36).substring(2, 8);
+  } while (database[output])
+  return output;
 };
 
 const emailAuth = function(user, database) {
