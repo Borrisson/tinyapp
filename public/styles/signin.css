@@ -36,8 +36,9 @@ main {
 }
 .form-signin .form-control:focus {
   z-index: 2;
-  border-color: chartreuse;
+  border-color: #28a744;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  box-shadow: 0 0 0 0.1rem #28a744;
 }
 .form-signin input[type="email"] {
   margin-bottom: -1px;
@@ -48,4 +49,10 @@ main {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+.btn-outline-light:hover {
+  color: #28a745;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 }
